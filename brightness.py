@@ -1,5 +1,6 @@
 import pymeanshift as pms
 import numpy as np
+import cv2
 import math
 from PIL import Image, ImageStat
 import sys
@@ -44,18 +45,24 @@ def brightness_3( im_file ):
     area = (0, 0, 832, 208)
     cropped_img = im.crop(area)
     stat = ImageStat.Stat(cropped_img)
-    print "#######", stat.mean
+    #print "#######", stat.mean
     r,g,b,p = stat.mean
     return math.sqrt(0.241*(r**2) + 0.691*(g**2) + 0.068*(b**2))
 
 def hsv( im_file ):
-    im = im = Image.open(im_file)
+    im = Image.open(im_file)
     area = (0, 0, 832, 208)
     cropped_img = im.crop(area)
-    HSV = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)
-    H = HSV[:,:,0].mean
-    S = HSV[:,:,1].mean
-    V = HSV[:,:,2].mean
+    img = np.array(cropped_img)
+    HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    H,S,V=cv2.split(HSV)
+    #H = HSV[:,:,0]
+    #S = HSV[:,:,1].mean
+    #V = HSV[:,:,2].mean
+    #return H,S,V
+    H=np.mean(H)
+    S=np.mean(S)
+    V=np.mean(V)
     return H,S,V
 
 
