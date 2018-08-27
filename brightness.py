@@ -18,14 +18,15 @@ def main():
             bright_1=brightness_1(file)
             bright_2=brightness_2(file)
             bright_3=brightness_3(file)
-            print file , bright_1, bright_2, bright_3
+            H,S,V= hsv(file)
+            print file , bright_1, bright_2, bright_3, H,S,V
 
 def brightness_1( im_file ):
     #Convert image to greyscale, return average pixel brightness. 
     im = Image.open(im_file).convert('L')
     area = (0, 0, 832, 208)
     cropped_img = im.crop(area)
-    stat = ImageStat.Stat(im)
+    stat = ImageStat.Stat(cropped_img)
     return stat.mean[0]
 
 def brightness_2( im_file ):
@@ -33,17 +34,30 @@ def brightness_2( im_file ):
     im = Image.open(im_file).convert('L')
     area = (0, 0, 832, 208)
     cropped_img = im.crop(area)
-    stat = ImageStat.Stat(im)
+    stat = ImageStat.Stat(cropped_img)
     return stat.rms[0]
 
 
 def brightness_3( im_file ):
     #Average pixels, then transform to "perceived brightness".
-    im = Image.open(im_file).convert('RGB')
+    im = Image.open(im_file)
     area = (0, 0, 832, 208)
     cropped_img = im.crop(area)
     stat = ImageStat.Stat(cropped_img)
-    r,g,b = stat.mean
+    print "#######", stat.mean
+    r,g,b,p = stat.mean
     return math.sqrt(0.241*(r**2) + 0.691*(g**2) + 0.068*(b**2))
+
+def hsv( im_file ):
+    im = im = Image.open(im_file)
+    area = (0, 0, 832, 208)
+    cropped_img = im.crop(area)
+    HSV = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)
+    H = HSV[:,:,0].mean
+    S = HSV[:,:,1].mean
+    V = HSV[:,:,2].mean
+    return H,S,V
+
+
 
 main()
