@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/caijieyang/Desktop/allgoodthinghere/model.ckpt"
+all_model_checkpoint_paths: "/Users/caijieyang/Desktop/allgoodthinghere/model.ckpt"
